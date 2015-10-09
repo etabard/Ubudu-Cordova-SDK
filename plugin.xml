@@ -28,7 +28,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.ubudu.cordova.sdk"
-        version="0.1-dev-5">
+        version="0.1-dev-6">
     <name>Ubudu SDK</name>
     <description>Cordova Ubudu SDK Plugin</description>
     <license>BSD License</license>

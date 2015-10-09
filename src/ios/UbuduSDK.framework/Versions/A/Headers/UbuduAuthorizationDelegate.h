@@ -2,7 +2,7 @@
 //  UbuduAuthorizationDelegate.h
 //  UbuduSDK
 //
-// Copyright (c) 2011-2015, UBUDU SAS
+// Copyright (c) 2011, UBUDU SAS
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -29,21 +29,55 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  A protocol you can implement if you want to monitor changes on properties of a `UbuduAuthorizationManager` object.
+ */
 @protocol UbuduAuthorizationDelegate <NSObject>
 
 @optional
 
 /*
- * Methods used to inform you that the status of one of the feature of the UbuduSDK changed.
+ *  Methods used to inform you that the status of one of the UbuduSDK services.
  */
-- (void)ubuduBeaconsServiceStatusDidChange:(BOOL)isEnabled; // Beacons service is enabled if UbuduSDK.beaconsEnabled is YES and that UbuduSDK is currently running.
-- (void)ubuduGeofencesServiceStatusDidChange:(BOOL)isEnabled; // Geofences service is enabled if UbuduSDK.geofencesEnabled is YES and that UbuduSDK is currently running.
+
+/**
+ *  Beacons service status changed. Beacons service is considered enabled if `UbuduSDK.beaconsEnabled` is YES and UbuduSDK is currently running.
+ *
+ *  @param isEnabled Is the beacons service enabled and running.
+ */
+- (void)ubuduBeaconsServiceStatusDidChange:(BOOL)isEnabled;
+
+/**
+ *  Goefences service status changed. Geofences service is enabled if UbuduSDK.geofencesEnabled is YES and that UbuduSDK is currently running.
+ *
+ *  @param isEnabled Is the geofences service enabled and running.
+ */
+- (void)ubuduGeofencesServiceStatusDidChange:(BOOL)isEnabled;
+
 
 /*
- * Methods used to inform you that the status of a service used by the UbuduSDK has changed.
+ *  Methods used to inform you that the status of a service used by the UbuduSDK has changed.
  */
-- (void)locationServiceStatusDidChange:(BOOL)isEnabled; // Global or app-specific location service status changed.
+
+/**
+ *  Global or app-specific location service status changed.
+ *
+ *  @param isEnabled Is the location service enabled for the application.
+ */
+- (void)locationServiceStatusDidChange:(BOOL)isEnabled;
+
+/**
+ *  Bluetooth status changed.
+ *
+ *  @param isEnabled Is the bluetooth currently turned on.
+ */
 - (void)bluetoothStatusDidChange:(BOOL)isEnabled;
+
+/**
+ *  Background refresh service status changed.
+ *
+ *  @param isEnabled Is the background refresh service enabled for the application.
+ */
 - (void)backgroundRefreshStatusDidChange:(BOOL)isEnabled;
 
 @end

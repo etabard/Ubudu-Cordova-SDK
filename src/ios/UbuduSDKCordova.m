@@ -182,14 +182,10 @@
     NSLog(@"UbuduSDKCordova: deviceSupportsGeofences");
     CDVPluginResult* pluginResult = nil;
 
-    NSError *error = nil;
-    BOOL geofencesSupported = [UbuduSDK deviceSupportsGeofences:[UIDevice currentDevice] error:&error];
+    BOOL geofencesSupported = [UbuduSDK deviceSupportsGeofences];
 
-    if (error != nil) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:geofencesSupported];
-    }
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:geofencesSupported];
+    
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -198,14 +194,10 @@
     NSLog(@"UbuduSDKCordova: deviceSupportsBeacons");
     CDVPluginResult* pluginResult = nil;
 
-    NSError *error = nil;
-    BOOL beaconsSupported = [UbuduSDK deviceSupportsBeacons:[UIDevice currentDevice] error:&error];
+    BOOL beaconsSupported = [UbuduSDK deviceSupportsBeacons];
 
-    if (error != nil) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:beaconsSupported];
-    }
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:beaconsSupported];
+    
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
