@@ -75,7 +75,7 @@
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.ubudu.sdk.WebActivity" />
-            <receiver android:name=".service.UbuduBootReceiver">
+            <receiver android:name="com.ubudu.sdk.service.UbuduBootReceiver">
                 <intent-filter>
                     <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 </intent-filter>
@@ -87,6 +87,7 @@
                 <intent-filter>
                     <action android:name="com.ubudu.sdk.service.UbuduService.action.DISPLAY_WEB_PAGE" />
                     <action android:name="com.ubudu.sdk.service.UbuduService.action.OPEN_SAMSUNG_WALLET" />
+                    <action android:name="com.ubudu.sdk.service.UbuduService.action.OPEN_DEEP_LINK" />
                 </intent-filter>
             </service>
             <service
@@ -96,7 +97,7 @@
                 android:isolatedProcess="false" />
             <service
                 android:name="com.ubudu.network.ibeacon.IBeaconIntentProcessor"
-                android:enabled="true"
+                android:enabled="true" 
                 android:exported="false"
                 android:isolatedProcess="false">
                 <meta-data android:name="background" android:value="true" />
@@ -107,10 +108,14 @@
         </config-file>
         <source-file src="src/android/com/ubudu/cordova/sdk/UbuduSDKCordova.java" target-dir="src/com/ubudu/cordova/sdk" />
         <source-file src="src/android/com/ubudu/cordova/sdk/UbuduUserCordova.java" target-dir="src/com/ubudu/cordova/sdk" />
-        <source-file src="src/android/ubudu-sdk-1.4.10.jar" target-dir="libs" />
+        <source-file src="src/android/ubudu-sdk-1.9.4.jar" target-dir="libs" />
         <source-file src="src/android/gson-2.2.4.jar" target-dir="libs" />
         <source-file src="src/android/ormlite-android-4.48.jar" target-dir="libs" />
         <source-file src="src/android/ormlite-core-4.48.jar" target-dir="libs" />
         <source-file src="src/android/volley-4.5.0.jar" target-dir="libs" />
+        <source-file src="src/android/jfuzzylite-1.1.0.jar" target-dir="libs" />
+
+        <framework src="com.google.android.gms:play-services-plus:+" />
+        <framework src="com.google.android.gms:play-services-identity:+" />
     </platform>
 </plugin>
