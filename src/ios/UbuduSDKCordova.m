@@ -50,19 +50,22 @@
 
 - (void)setAppNamespace:(CDVInvokedUrlCommand*)command
 {
-    CDVPluginResult* pluginResult = nil;
+    
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult* pluginResult = nil;
 
-    if ([command.arguments count] == 0) {
-        NSLog(@"UbuduSDKCordova: setAppNamespace => error, no parameter");
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"App namespace parameter not provided"];
-    }
-    else {
-        NSString *appNamespace = [command.arguments objectAtIndex:0];
-        [UbuduSDK sharedInstance].appNamespace = appNamespace;
-        NSLog(@"UbuduSDKCordova: setAppNamespace '%@'", appNamespace);
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    }
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        if ([command.arguments count] == 0) {
+            NSLog(@"UbuduSDKCordova: setAppNamespace => error, no parameter");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"App namespace parameter not provided"];
+        }
+        else {
+            NSString *appNamespace = [command.arguments objectAtIndex:0];
+            [UbuduSDK sharedInstance].appNamespace = appNamespace;
+            NSLog(@"UbuduSDKCordova: setAppNamespace '%@'", appNamespace);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void)getBaseURL:(CDVInvokedUrlCommand*)command
@@ -205,64 +208,69 @@
 {
     NSLog(@"UbuduSDKCordova: setUserInfo");
     
-    id userInfo = [command.arguments objectAtIndex:0];
-    if ([userInfo isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *userInfoDict = (NSDictionary *)userInfo;
+    [self.commandDelegate runInBackground:^{
+        id userInfo = [command.arguments objectAtIndex:0];
+        if ([userInfo isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *userInfoDict = (NSDictionary *)userInfo;
 
-        id rawUserID = userInfoDict[@"userID"];
-        id rawProperties = userInfoDict[@"properties"];
-        id rawTags = userInfoDict[@"tags"];
+            id rawUserID = userInfoDict[@"userID"];
+            id rawProperties = userInfoDict[@"properties"];
+            id rawTags = userInfoDict[@"tags"];
 
-        NSString *userID = nil;
-        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-        NSMutableArray *tags = [NSMutableArray array];
+            NSString *userID = nil;
+            NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+            NSMutableArray *tags = [NSMutableArray array];
 
-        if ([rawUserID isKindOfClass:[NSString class]]) {
-            userID = (NSString *)rawUserID;
-        }
+            if ([rawUserID isKindOfClass:[NSString class]]) {
+                userID = (NSString *)rawUserID;
+            }
 
-        if ([rawProperties isKindOfClass:[NSDictionary class]]) {
-            for (id propertyKey in (NSDictionary *)rawProperties) {
-                id propertyValue = rawProperties[propertyKey];
-                if ([propertyKey isKindOfClass:[NSString class]] && [propertyValue isKindOfClass:[NSString class]]) {
-                    properties[propertyKey] = propertyValue;
+            if ([rawProperties isKindOfClass:[NSDictionary class]]) {
+                for (id propertyKey in (NSDictionary *)rawProperties) {
+                    id propertyValue = rawProperties[propertyKey];
+                    if ([propertyKey isKindOfClass:[NSString class]] && [propertyValue isKindOfClass:[NSString class]]) {
+                        properties[propertyKey] = propertyValue;
+                    }
                 }
             }
-        }
 
-        if ([rawTags isKindOfClass:[NSArray class]]) {
-            for (id tagValue in (NSArray *)rawTags) {
-                if ([tagValue isKindOfClass:[NSString class]]) {
-                    [tags addObject:tagValue];
+            if ([rawTags isKindOfClass:[NSArray class]]) {
+                for (id tagValue in (NSArray *)rawTags) {
+                    if ([tagValue isKindOfClass:[NSString class]]) {
+                        [tags addObject:tagValue];
+                    }
                 }
             }
-        }
 
-        UbuduUser *user = [[UbuduUser alloc] initWithID:userID withProperties:properties tags:tags];
-        [UbuduSDK sharedInstance].user = user;
-    }
-    
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            UbuduUser *user = [[UbuduUser alloc] initWithID:userID withProperties:properties tags:tags];
+            [UbuduSDK sharedInstance].user = user;
+        }
+        
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+    }];
 }
 
 - (void)start:(CDVInvokedUrlCommand*)command
 {
     NSLog(@"UbuduSDKCordova: start");
-    CDVPluginResult* pluginResult = nil;
-    
-    NSError *error = nil;
-    BOOL result = [[UbuduSDK sharedInstance] start:&error];
-    if (result) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    } else {
-        if (error != nil) {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult* pluginResult = nil;
+        
+        NSError *error = nil;
+        BOOL result = [[UbuduSDK sharedInstance] start:&error];
+        if (result) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         } else {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            if (error != nil) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+            } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            }
         }
-    }
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void)stop:(CDVInvokedUrlCommand*)command

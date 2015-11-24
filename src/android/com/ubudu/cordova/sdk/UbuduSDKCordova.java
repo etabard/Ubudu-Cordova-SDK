@@ -156,13 +156,17 @@ public class UbuduSDKCordova extends CordovaPlugin {
         callbackContext.success(appNamespace);
     }
 
-    private void setAppNamespace(String appNamespace, CallbackContext callbackContext) {
+    private void setAppNamespace(final String appNamespace, final CallbackContext callbackContext) {
         Log.d("UbuduSDKCordova", "setAppNamespace");
 
-        UbuduSDK sdk = getUbuduSDK();
-        sdk.setNamespace(appNamespace);
-
-        callbackContext.success();
+        this.cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                UbuduSDK sdk = getUbuduSDK();
+                sdk.setNamespace(appNamespace);
+                callbackContext.success();
+            }
+        });
+        
     }
 
     private void getBaseURL(CallbackContext callbackContext) {
